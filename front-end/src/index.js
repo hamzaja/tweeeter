@@ -4,11 +4,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
 //--------------constants
 const userURL = "http://localhost:3000/users"
+const tweetURL = "http://localhost:3000/tweet_classes"
 const main = document.querySelector("main")
 const userUl = document.querySelector("#User-list")
 const userform = document.querySelector("#new-user-form")
 const tweetdiv = document.querySelector(".tweet-div")
 const tweetdivform = document.querySelector(".user-tweet-form")
+
 
 
 //--------------- fetch ------------------------
@@ -62,6 +64,45 @@ function newUser(){
  }
 
 
+// ---------creating a new tweet
+
+function postNewTweet(){
+    let tweetinput = document.querySelector("#tweetinput").value
+    let tweetId = document.querySelector(".user-tweet").id
+    let userId = document.querySelector(".user-tweet").userId
+    console.log(userId , tweetId , tweetinput)
+    // console.log(tweetURL+"/"+`${tweetId}`)
+
+    fetch(tweetURL, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        tweet: tweetinput
+      })
+    }).then(res => res.json())
+    .then(showtweets(user))
+
+}
+
+
+ function editthistweet(tweetid){
+   console.log(tweetid)
+   fetch(`http://localhost:3000/tweet_classes/${tweetid}` , {
+    method: 'PATCH',
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+        tweet: "lets patch ittfdsvzx  tttt......."
+    })
+  })
+
+ }
 
 
 
@@ -81,7 +122,8 @@ function newUser(){
     li.innerHTML = `<p> ${user.name} </p>
     <button class = "show-tweet"> show all tweets </button>
     <p> ${user.username} </p>
-    <button class = "remove-user"> remove user</button>`
+    <button class = "remove-user"> remove user</button>
+    `
     userUl.append(li);
 
     li.addEventListener("click" , function(event){
@@ -93,18 +135,22 @@ function newUser(){
 
 //   Tweet
 
+
 function showtweets(user){
   user.tweet_classes.forEach(tweet => {
    const li = document.createElement('li')
    li.className = 'user-tweet'
    li.id = `${tweet.id}`
+   li.userId = `${user.id}`
    li.innerHTML = `<p> ${tweet.tweet} </p>
-   <button class= new-tweet> make a new tweet</button>`
+   <button class= new-tweet> make a new tweet</button>
+   <button class= edit-tweet> Edit this tweet</button>`
 
    tweetdiv.append(li);
   })
-}
 
+}
+ /////// new tweet form
 
 function createnewtweet() {
 
@@ -117,6 +163,9 @@ function createnewtweet() {
       `
       tweetdivform.append(form);
 }
+
+
+
 
 
 // -------------------event lister
@@ -144,6 +193,10 @@ function createnewtweet() {
       if (event.target.innerText == "make a new tweet"){
         createnewtweet();
       }
+      else if (event.target.innerText == "Edit this tweet") {
+        const tweetid = event.target.parentElement.id
+        editthistweet(tweetid);
+      }
 
    })
  /// make a new tweet
@@ -154,18 +207,10 @@ function createnewtweet() {
   document.querySelector("#tweetinput").value
 
       if (event.target.innerText == "Submit"){
-            console.log(tweetinput)
+            postNewTweet();
       }
 
-
  })
-
-
-
-
-
-
-
 
 
 
