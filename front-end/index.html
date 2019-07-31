@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Tweeeter</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- <link rel="stylesheet" href="styles.css"> -->
   </head>
   <body>
     <header>
@@ -11,9 +11,36 @@
     </header>
 
     <main>
-      <!-- tweets -->
+
+  <form id="new-user-form"> Create a new User
+      <div class="user-form-group">
+        <label for="new-user">name</label>
+        <input name="name" type="text" class="form-name" id="nameinput">
+      </div>
+      <div class="user-form-group">
+        <label for="username">User Name</label>
+        <input name="username" type="text" class="form-username" id="usernameinput" >
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+    <div id= "user-div">
+      <ul id="User-list">
+        <!-- all users -->
+      </ul>
+    </div>
+    <hr></hr>
+    <p><center>user tweets</center></p>
+    <center><div Class = "tweet-div">
+        <!-- show tweets -->
+    <div></center>
+
+      <div class="user-tweet-form">
+      <!-- tweeet form -->
+      </div>
+
     </main>
 
-    <script src="./src/index.js"></script>
   </body>
+  <script src="src/index.js"></script>
 </html>
