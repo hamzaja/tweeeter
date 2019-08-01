@@ -71,7 +71,7 @@ function newUser(){
       // console.log(userIdForTweet)
       fetch(userURL+`/${userIdForTweet}`)
       .then(res => res.json())
-      .then(function ( user) {
+      .then(function(user) {
         // console.log(user.tweet_classes)
         if (user.tweet_classes.length === 0 ){createButtonForNewTweet(user)}
         else {user.tweet_classes.forEach(tweet => { showtweets(tweet) })}
@@ -128,6 +128,18 @@ function postNewTweet(userId){
 
 }
 
+//----------------delete tweet
+
+  function deleteTheTweet(tweetId){
+    // console.log(event.target.parentElement)
+    console.log(tweetId)
+    fetch(tweetURL+`/${tweetId}`,{
+      method: 'DELETE'
+    })
+    // .then(res => res.json())
+    .then(event.target.parentElement.remove())
+
+  }
 
 //---------------------------------slap on dom--------------------------------------------------------
 
@@ -171,7 +183,8 @@ function showtweets(tweet){
    li.className = 'user-tweet'
    li.id = `${tweet.id}`
    li.innerHTML = `<p> ${tweet.tweet} </p>
-   <button class= edit-tweet> Edit this tweet</button>`
+   <button class= edit-tweet> Edit this tweet</button>
+   <button class= Delete this> Delete this</button>`
    tweetdiv.append(li);
 
   }
@@ -268,14 +281,20 @@ function createnewtweet(userId) {
                     // event.target.parentElement.id
      const tweetId = event.target.parentElement.id
      console.log(tweetId)
+// new
       if (event.target.innerText == "make a new tweet"){
+        console.log(event.target)
         createnewtweet(userIddd);
       }
+// edit text area
       else if(event.target.innerText == "Edit this tweet") {
           edittweettextarea(tweetId);
-
       }
-
+// delete tweet
+      else if(event.target.innerText == "Delete this"){
+        deleteTheTweet(tweetId);
+      }
+// edit
       else if(event.target.innerText == "Done Editing"){
         const textarea = document.querySelector(".text-area-edit")
         const editedValue = document.querySelector(".text-area-edit").value
@@ -300,7 +319,6 @@ function createnewtweet(userId) {
             form.remove();
       }
  })
-
 
 
 
