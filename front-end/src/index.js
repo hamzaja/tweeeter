@@ -72,7 +72,7 @@ function newUser(){
       fetch(userURL+`/${userIdForTweet}`)
       .then(res => res.json())
       .then(function ( user) {
-        console.log(user.tweet_classes)
+        // console.log(user.tweet_classes)
         if (user.tweet_classes.length === 0 ){createButtonForNewTweet(user)}
         else {user.tweet_classes.forEach(tweet => { showtweets(tweet) })}
       })
@@ -101,15 +101,16 @@ function postNewTweet(userId){
     .then(function(data){
         showtweets(data)
     })
-
-
 }
 
-// -------edit tweet
+// ----------–––––––––-----edit tweet
 
- function editthistweet(){
-   const tweetid = event.target.parentElement.id
+ function editthistweet(editedValue){
+   const tweetid = event.target.id
+   // debugger
+   console.log(event.target)
    console.log(tweetid)
+   console.log(editedValue)
    fetch(`http://localhost:3000/tweet_classes/${tweetid}` , {
     method: 'PATCH',
     headers: {
@@ -117,15 +118,15 @@ function postNewTweet(userId){
       "Accept": "application/json"
     },
     body: JSON.stringify({
-        tweet: "lets patch ittfdsvzx  tttt......."
+        tweet: editedValue
     })
   })
+  .then(res => res.json())
+  .then(function(data){
+      saveEditOnDom(data);
+  })
 
-  }
-
-
-
-
+}
 
 
 //---------------------------------slap on dom--------------------------------------------------------
@@ -176,7 +177,7 @@ function showtweets(tweet){
   }
      // user doesnt have tweet
    function createButtonForNewTweet(user){
-     // console.log(user.id)
+     console.log(user.id)
      let button = document.createElement("button")
      button.innerText = "make a new tweet"
      button.userId = `${user.id}`
@@ -196,7 +197,30 @@ function createnewtweet(userId) {
       <button type="submit" class="btn btn-primary">Submit</button>
       `
       tweetdivform.append(form);
-}
+    }
+// Text area for EDIT Tweet
+  function edittweettextarea(tweetId){
+    let textArea = document.createElement("TEXTAREA")
+    textArea.className = "text-area-edit"
+   let button = document.createElement("button")
+    button.id = `${tweetId}`
+    button.class = "text-area-button"
+    button.innerHTML = "Done Editing"
+    tweetdiv.append(textArea);
+    tweetdiv.append(button);
+  }
+
+// save edit on DOM
+  function saveEditOnDom(data){
+    let val = document.getElementById(data.id).firstChild.innerText = data.tweet
+    // console.log(val)
+    // debugger
+    // console.log(data.tweet)
+
+  }
+
+
+
 
 
 
@@ -222,43 +246,60 @@ function createnewtweet(userId) {
        deleteuser(userid);
      }
    })
+
+   // show all tweets
+   userUl.addEventListener("click" , function(){
+     const userIdForTweet = event.target.parentElement.id
+     if (event.target.innerText === "show all tweets"){
+       slapUserTweetsOnDom(userIdForTweet);
+     }
+   })
+
+
 // make a new tweet event listner
+///// Edit a new tweet event lister
    tweetdiv.addEventListener("click" , function(){
-     const userId = event.target.userId
+     // console.log(event.target)
+     // debugger
+     const userIddd = event.target.userId
+     console.log(userIddd)
+     // debugger
+     // const tweetId =
+                    // event.target.parentElement.id
+     const tweetId = event.target.parentElement.id
+     console.log(tweetId)
       if (event.target.innerText == "make a new tweet"){
-        createnewtweet(userId);
+        createnewtweet(userIddd);
       }
       else if(event.target.innerText == "Edit this tweet") {
-        editthistweet();
+          edittweettextarea(tweetId);
+
+      }
+
+      else if(event.target.innerText == "Done Editing"){
+        const textarea = document.querySelector(".text-area-edit")
+        const editedValue = document.querySelector(".text-area-edit").value
+        // console.log(editedValue)
+        console.log(event.target.id)
+          editthistweet(editedValue);
+          textarea.remove();
+          event.target.remove();
       }
 
    })
- ///// make a new tweet
-
+ ///// make a new tweet ++++++++
  tweetdivform.addEventListener("click", function(){
   const tweetinput = document.querySelector("#tweetinput").value
   event.preventDefault();
   const userId = event.target.parentElement.userid
+  console.log(userId)
   const form = document.querySelector('.new-tweet-form')
 
       if (event.target.innerText == "Submit"){
-
             postNewTweet(userId);
             form.remove();
-
       }
-
  })
-
-
- userUl.addEventListener("click" , function(){
-   const userIdForTweet = event.target.parentElement.id
-    if (event.target.innerText === "show all tweets"){
-      slapUserTweetsOnDom(userIdForTweet);
-    }
- })
-
-
 
 
 
