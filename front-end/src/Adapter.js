@@ -9,5 +9,4 @@ class Adapter{
     .then(resp => resp.json())
   }
 
-
 }
