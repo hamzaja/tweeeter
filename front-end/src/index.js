@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function(){
 
 
@@ -150,21 +152,25 @@ function postNewTweet(userId){
     // console.log(user)
     const li = document.createElement('li')
     li.className = `userClass`
-    li.id = `${user.id}`
-    li.innerHTML = `Name: ${user.name}</br>
+    li.id = user.id
+    li.innerHTML += `Name: ${user.name}</br>
     User Name: ${user.username}</br>
-    <button class = "show-tweet"> show all tweets </button>
+    <button class = "show-tweet green-button"> show all tweets </button>
     <button class = "remove-user"> remove user </button>
     </br></br></br></br>
     `
     userUl.append(li);
+    // debugger
+    // console.log(userUl.querySelector("li:last-child"))
+    li.querySelector(".show-tweet").addEventListener("click" , function (){console.log("fsdss")} )
 
     //   li.addEventListener("click" , function(event){
     //
     //   if (event.target.innerText == "show all tweets"){
     //       user.tweet_classes.forEach(tweet => {showtweets(tweet)})
     //   }
-    // })
+    // debugger
+  // })
   }
 
 //   Tweet on the DOM
@@ -183,8 +189,9 @@ function showtweets(tweet){
    li.className = 'user-tweet'
    li.id = `${tweet.id}`
    li.innerHTML = `<p> ${tweet.tweet} </p>
-   <button class= edit-tweet> Edit this tweet</button>
-   <button class= Delete this> Delete this</button>`
+   <button class="edit-tweet"> Edit this tweet</button>
+   <button class= Delete this> Delete this</button>
+   <button class= uppercase this> POWER CASE</button>`
    tweetdiv.append(li);
 
   }
@@ -233,7 +240,26 @@ function createnewtweet(userId) {
   }
 
 
+function changeToUpperCase(id){
+  const newuppercase = document.getElementById(id).firstChild.innerText.toUpperCase()
+  console.log(newuppercase)
+  fetch(tweetURL+`/${id}`,{
+    method: 'PATCH',
+    headers: {
+      'Content-Type': "application/json",
+      'Accept': "application/json"
+    },
+    body: JSON.stringify({
+      tweet: newuppercase
+    })
+  })
+  .then(res => res.json())
+  .then(function functionName(data){
 
+  document.getElementById(id).firstChild.innerText = newuppercase
+})
+
+}
 
 
 
@@ -264,14 +290,26 @@ function createnewtweet(userId) {
    userUl.addEventListener("click" , function(){
      const userIdForTweet = event.target.parentElement.id
      if (event.target.innerText === "show all tweets"){
+       console.dir(event.target)
        slapUserTweetsOnDom(userIdForTweet);
      }
    })
+   userUl.addEventListener("click", function(){
+     console.log(document.querySelector("." + event.target.className))
+     console.log(event.target.classList.contains("show-tweet"))
+     if (event.target.className === "show-tweet"){
+       console.log("clicked")
+     }
+   })
+
+   // debugger
 
 
 // make a new tweet event listner
 ///// Edit a new tweet event lister
    tweetdiv.addEventListener("click" , function(){
+
+     // debugger
      // console.log(event.target)
      // debugger
      const userIddd = event.target.userId
@@ -281,10 +319,15 @@ function createnewtweet(userId) {
                     // event.target.parentElement.id
      const tweetId = event.target.parentElement.id
      console.log(tweetId)
+     // if (document.querySelector(".uppercase"))
+     if (event.target.innerText == "POWER CASE")
+     {
+         changeToUpperCase(tweetId);
+     }
 // new
-      if (event.target.innerText == "make a new tweet"){
-        console.log(event.target)
+      else if (event.target.innerText == "make a new tweet"){
         createnewtweet(userIddd);
+        event.target.remove();
       }
 // edit text area
       else if(event.target.innerText == "Edit this tweet") {
@@ -294,6 +337,11 @@ function createnewtweet(userId) {
       else if(event.target.innerText == "Delete this"){
         deleteTheTweet(tweetId);
       }
+
+    // else if (event.target.innerText == "") {
+    //
+    // }
+
 // edit
       else if(event.target.innerText == "Done Editing"){
         const textarea = document.querySelector(".text-area-edit")
@@ -319,22 +367,6 @@ function createnewtweet(userId) {
             form.remove();
       }
  })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
